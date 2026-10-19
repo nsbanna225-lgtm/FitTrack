@@ -1,0 +1,9 @@
+.session-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 20px; }
+.session-card h2 { font-size: 1.15rem; overflow-wrap: anywhere; margin: 16px 0; }
+.session-card p { line-height: 1.8; }
+.session-picker { border: 0; padding: 0; margin: 0 0 20px; min-width: 0; }
+.session-times { border-block: 1px solid var(--border, #dfe5dc); padding: 12px 0 20px; margin: 20px 0; }
+.session-times select { width: 100%; }
+.session-filters { flex-wrap: wrap; }
+.session-filters input { min-width: 0; }
+@media (max-width: 600px) { .session-grid { grid-template-columns: minmax(0,1fr); } .session-times .member-list-title { flex-wrap: wrap; } }

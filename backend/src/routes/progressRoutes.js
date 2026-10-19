@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { authenticate, authorize } from '../middleware/auth.js';
+import * as controller from '../controllers/progressController.js';
+const router = Router();
+router.use((_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+router.use(authenticate, authorize('admin', 'trainer', 'member'));
+router.get('/members/:memberId', controller.history);
+router.post('/members/:memberId', authorize('admin', 'member'), controller.create);
+router.put('/members/:memberId/:id', authorize('admin', 'member'), controller.update);
+export default router;

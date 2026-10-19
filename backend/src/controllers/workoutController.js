@@ -1,0 +1,11 @@
+import * as service from '../services/workoutService.js';
+import * as validate from '../validators/workoutValidators.js';
+export const library = kind => async (req, res) => res.json(await service.listLibrary(kind, validate.list(req.query, kind, req.user.role), req.user));
+export const exercise = edit => async (req, res) => res.status(edit ? 200 : 201).json({ exercise: await service.saveExercise(edit ? validate.id(req.params.id) : null, validate.exercise(req.body, edit), req.user) });
+export const plan = edit => async (req, res) => res.status(edit ? 200 : 201).json({ plan: await service.savePlan(edit ? validate.id(req.params.id) : null, validate.plan(req.body, edit), req.user) });
+export const members = async (req, res) => res.json(await service.listMembers(validate.list(req.query, 'members', req.user.role), req.user));
+export const assign = async (req, res) => res.status(201).json({ assignment: await service.assign(validate.id(req.params.id), validate.assignment(req.body), req.user) });
+export const assignments = async (req, res) => res.json(await service.listAssignments(validate.list(req.query, 'assignments', req.user.role), req.user));
+export const detail = async (req, res) => res.json({ assignment: await service.detail(validate.id(req.params.id), req.user) });
+export const complete = async (req, res) => res.json({ assignment: await service.complete(validate.id(req.params.id), validate.completion(req.body), req.user) });
+export const archive = async (req, res) => res.json({ assignment: await service.archive(validate.id(req.params.id), validate.transition(req.body), req.user) });

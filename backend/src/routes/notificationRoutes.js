@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { authenticate, authorize } from '../middleware/auth.js';
+import * as controller from '../controllers/notificationController.js';
+const router = Router();
+router.use((_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+router.use(authenticate, authorize('admin', 'trainer', 'member'));
+router.get('/push-config', controller.pushConfig);
+router.put('/push-subscriptions', controller.subscribe);
+router.delete('/push-subscriptions', controller.unsubscribe);
+router.get('/', controller.list);
+router.get('/unread', controller.unread);
+router.patch('/:id/read', controller.mark);
+export default router;

@@ -1,0 +1,47 @@
+/* Shared responsive and keyboard refinements, loaded after feature styles. */
+:root { scrollbar-gutter: stable; }
+:focus-visible { outline: 3px solid #438267; outline-offset: 3px; }
+.workspace-content:focus { outline: none; }
+.workspace-content :where(section, article, form, fieldset, label),
+.account-card > div, .workspace-welcome > div { min-width: 0; }
+.workspace-content :where(p, dd, h2, h3), .settings-aside { overflow-wrap: anywhere; }
+input, select, textarea { max-width: 100%; }
+textarea { resize: vertical; }
+button, .icon-button, .notification-bell { min-height: 44px; }
+.icon-button, .notification-bell { min-width: 44px; flex-shrink: 0; }
+button:disabled { cursor: not-allowed; }
+.member-table-scroll, .dashboard-table-scroll, .progress-table, .analytics-bars {
+  max-width: 100%; overscroll-behavior: contain;
+}
+.mobile-dialog { overscroll-behavior: contain; overflow-y: auto; }
+body:has(.mobile-dialog[open]) { overflow: hidden; }
+.notification-meta { flex-wrap: wrap; }
+.member-actions > a, .member-link { display: inline-flex; align-items: center; min-height: 44px; }
+summary { min-height: 44px; align-content: center; }
+@media (max-width: 800px) {
+  .workspace .workspace-content :is(input, select, textarea), .auth-card input { font-size: 16px; }
+  .workspace-breadcrumb { min-width: 0; }
+  .workspace-breadcrumb > span { overflow-wrap: anywhere; }
+}
+@media (max-width: 600px) {
+  .member-filters > label, .member-filters > label:first-child { min-width: 0; flex-basis: 100%; }
+  .member-filters > button { flex: 1 1 auto; }
+  .member-actions > button { max-width: 100%; white-space: normal; }
+  .dashboard-metrics { grid-template-columns: minmax(0, 1fr); }
+  .dashboard-metric > strong { font-size: clamp(24px, 7vw, 34px); overflow-wrap: anywhere; }
+  .analytics-row { grid-template-columns: 79px minmax(0, 1fr); }
+  .analytics-row .analytics-track { grid-column: 2; grid-row: 1 / span 2; }
+  .analytics-row strong { grid-column: 1; text-align: left; overflow-wrap: anywhere; }
+}
+@media (max-width: 380px) {
+  .workspace-content { padding: 24px 12px; }
+  .workspace-breadcrumb > span { display: none; }
+  .workspace-header { justify-content: space-between; }
+  .trainer-slot, .workout-fields { grid-template-columns: minmax(0, 1fr); }
+  .mobile-dialog { padding: 20px; }
+  .landing-actions { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+

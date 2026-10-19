@@ -1,0 +1,19 @@
+.progress-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.progress-summary, .progress-page > .member-panel { margin-bottom: 1.25rem; }
+.progress-summary strong { font-size: 1.5rem; }
+.progress-summary p { font-size: .9rem; line-height: 1.6; }
+.progress-fields, .progress-measurements { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.progress-measurements { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.progress-measurements dt { font-size: .8rem; opacity: .75; }
+.progress-measurements dd { margin: .4rem 0; font-weight: 600; }
+.progress-chart svg { width: 100%; height: auto; max-height: 320px; color: #245840; display: block; margin-top: 1rem; }
+.progress-chart svg text { font-size: 13px; fill: currentColor; }
+.progress-chart label { display: grid; gap: .5rem; max-width: 320px; }
+.progress-table { overflow: auto; max-height: 300px; }
+.progress-table table { width: 100%; text-align: left; border-collapse: collapse; }
+.progress-table td, .progress-table th { padding: .6rem; border-bottom: 1px solid #dbe3d5; }
+.progress-record { padding: 1.25rem 0; border-top: 1px solid #dbe3d5; }
+.progress-page progress { width: 100%; accent-color: #245840; }
+.progress-page summary { cursor: pointer; padding: .5rem 0; }
+@media (max-width: 700px) { .progress-summary { grid-template-columns: 1fr; } .progress-measurements { grid-template-columns: repeat(2, minmax(0, 1fr)); } .progress-chart svg text { font-size: 24px; } }
+@media (max-width: 420px) { .progress-fields { grid-template-columns: 1fr; } }

@@ -1,0 +1,16 @@
+import { Router } from 'express';
+import { authenticate, authorize } from '../middleware/auth.js';
+import * as controller from '../controllers/membershipController.js';
+const router=Router();
+router.use((_req,res,next)=>{res.set('Cache-Control','no-store');next();});
+router.use(authenticate);
+router.get('/me',authorize('member'),controller.mine);
+router.use(authorize('admin'));
+router.get('/plans',controller.plans);
+router.post('/plans',controller.createPlan);
+router.patch('/plans/:id',controller.updatePlan);
+router.get('/',controller.list);
+router.get('/members/:id',controller.detail);
+router.post('/members/:id',controller.enroll);
+router.post('/members/:id/renew',controller.renew);
+export default router;

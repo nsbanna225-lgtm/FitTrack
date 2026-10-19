@@ -1,0 +1,13 @@
+{
+  "name": "FitTrack Fitness Management",
+  "short_name": "FitTrack",
+  "description": "Fitness management for members, trainers and admins.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f7f0",
+  "theme_color": "#11251f",
+  "icons": [
+    { "src": "/fittrack-icon.svg", "sizes": "192x192 512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

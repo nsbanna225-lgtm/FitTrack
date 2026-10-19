@@ -1,0 +1,15 @@
+import { Router } from 'express';
+import { authenticate, authorize } from '../middleware/auth.js';
+import * as service from '../services/sessionService.js';
+import * as validate from '../validators/sessionValidators.js';
+const router = Router();
+router.use((_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+router.use(authenticate, authorize('admin', 'trainer', 'member'));
+router.get('/', async (req, res) => res.json(await service.listSessions(validate.list(req.query, req.user.role), req.user)));
+router.get('/trainers', authorize('admin', 'member'), async (req, res) => res.json(await service.trainerOptions(validate.options(req.query))));
+router.get('/slots', authorize('admin', 'member'), async (req, res) => res.json(await service.availableSlots(validate.slots(req.query, req.user.role), req.user)));
+router.post('/', authorize('admin', 'member'), async (req, res) => res.status(201).json({ session: await service.book(validate.booking(req.body, req.user.role), req.user) }));
+router.patch('/:id', authorize('admin', 'member'), async (req, res) => res.json({ session: await service.reschedule(validate.id(req.params.id), validate.booking(req.body, req.user.role, true), req.user) }));
+router.post('/:id/cancel', async (req, res) => res.json({ session: await service.changeStatus(validate.id(req.params.id), validate.transition(req.body), 'cancelled', req.user) }));
+router.post('/:id/complete', authorize('admin', 'trainer'), async (req, res) => res.json({ session: await service.changeStatus(validate.id(req.params.id), validate.transition(req.body), 'completed', req.user) }));
+export default router;

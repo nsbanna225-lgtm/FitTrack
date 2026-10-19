@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { authenticate, authorize } from '../middleware/auth.js';
+import * as controller from '../controllers/attendanceController.js';
+const router = Router();
+router.use((_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+router.use(authenticate, authorize('admin', 'member'));
+router.get('/', controller.history);
+router.get('/report', authorize('admin'), controller.report);
+router.post('/check-in', controller.checkIn);
+export default router;

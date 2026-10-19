@@ -1,0 +1,13 @@
+.analytics-picker { display: grid; gap: 8px; font-size: .85rem; }
+.analytics-page .member-filters label { flex: 1 1 160px; min-width: 0; }
+.analytics-page .member-filters input, .analytics-page .member-filters select { width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5c3; border-radius: 9px; background: #fafbf7; color: #183d32; font: inherit; }
+.analytics-picker select { max-width: 100%; padding: 10px; border: 1px solid #cbd5c3; border-radius: 9px; background: #fafbf7; color: #183d32; }
+.analytics-bars { max-height: 440px; overflow-y: auto; margin: 24px 0; padding: 4px; }
+.analytics-row { display: grid; grid-template-columns: 95px minmax(20px, 1fr) minmax(65px, auto); gap: 12px; align-items: center; margin: 14px 0; font-size: .85rem; }
+.analytics-row strong { text-align: right; font-variant-numeric: tabular-nums; }
+.analytics-track { height: 22px; background: #edf1e6; border-radius: 5px; overflow: hidden; }
+.analytics-track > div { height: 100%; background: #39634f; border-radius: 5px; }
+.analytics-page details summary { cursor: pointer; padding: 12px 0; }
+.analytics-page .dashboard-metric strong { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .analytics-page .panel-heading { align-items: stretch; flex-direction: column; } .analytics-row { grid-template-columns: 79px minmax(15px, 1fr) minmax(50px, auto); gap: 7px; font-size: .75rem; } }
+@media (max-width: 600px) { .analytics-page .dashboard-metrics { grid-template-columns: 1fr; } }

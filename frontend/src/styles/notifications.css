@@ -1,0 +1,19 @@
+.notification-bell { position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-width: 42px; min-height: 42px; color: #214634; border-radius: 50%; background: #eaf0df; }
+.notification-bell > span { position: absolute; top: -5px; right: -6px; padding: 3px 5px; min-width: 19px; text-align: center; border-radius: 12px; font-size: 10px; color: white; background: #245840; }
+.notification-bell:focus-visible { outline: 2px solid #245840; outline-offset: 3px; }
+.notification-list { display: grid; gap: 1rem; }
+.notification-card { border-left: 4px solid #dbe3d5; }
+.notification-card.is-unread { border-left-color: #245840; }
+.notification-card h2 { margin: 14px 0 8px; overflow-wrap: anywhere; }
+.notification-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: #53694a; }
+.notification-card .member-actions { justify-content: space-between; }
+.push-settings { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px 24px; }
+.push-settings h2 { margin: 0 0 8px; }
+.push-settings p { margin: 0; }
+.push-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.push-settings > .member-note { grid-column: 1 / -1; }
+@media (max-width: 600px) {
+	.push-settings { grid-template-columns: minmax(0, 1fr); }
+	.push-actions { justify-content: flex-start; }
+	.push-actions > button { max-width: 100%; white-space: normal; }
+}
