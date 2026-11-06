@@ -39,15 +39,15 @@ npm run dev --prefix frontend
 
 Open [FitTrack locally](http://127.0.0.1:5173). The API uses port 5000; Vite proxies /api to it. GET /api/health checks liveness and GET /api/ready checks MongoDB connectivity. Process environment variables override backend/.env.
 
-For a populated local demonstration, follow [DEMO.md](DEMO.md). It covers all roles and uses a separate database. By default, public registration creates members; provision the first admin using the secure prompt workflow under First admin in [FEATURES.md](FEATURES.md).
+For a populated local samplenstration, follow [sample.md](sample.md). It covers all roles and uses a separate database. By default, public registration creates members; provision the first admin using the secure prompt workflow under First admin in [FEATURES.md](FEATURES.md).
 
-### College demo registration
+### College sample registration
 
-To create accounts with your own email addresses for a local college demo, set `NODE_ENV=development` and `DEMO_ROLE_REGISTRATION=true` in `backend/.env`, then restart the backend. The registration page reads the allowed roles from `/api/auth/registration-options` and offers Member, Trainer and Admin. The local configuration has this demo option enabled. `.env.example` keeps it disabled by default.
+To create accounts with your own email addresses for a local college sample, set `NODE_ENV=development` and `sample_ROLE_REGISTRATION=true` in `backend/.env`, then restart the backend. The registration page reads the allowed roles from `/api/auth/registration-options` and offers Member, Trainer and Admin. The local configuration has this sample option enabled. `.env.example` keeps it disabled by default.
 
 Enter a full name, a unique valid email, a password of at least 12 characters (maximum 72 UTF-8 bytes), matching confirmation and a role. Registration saves that role with the existing bcrypt hash and redirects to `/login` with “Account created successfully. Please sign in.” It does not sign in automatically. Log in with the matching role to reach `/member`, `/trainer` or `/admin`. Selecting a different role at login is rejected and never changes the account. Existing emails cannot be registered again or promoted through registration.
 
-This role self-selection is development/demo behavior only. Setting the flag to `false`, or using any `NODE_ENV` other than `development`, restores Member-only registration at the API and UI. Production ignores the demo opt-in. Existing JWT, profile restrictions and protected-route checks still use the database role. No personal email is hard-coded.
+This role self-selection is development/sample behavior only. Setting the flag to `false`, or using any `NODE_ENV` other than `development`, restores Member-only registration at the API and UI. Production ignores the sample opt-in. Existing JWT, profile restrictions and protected-route checks still use the database role. No personal email is hard-coded.
 
 ## Verification
 
@@ -65,7 +65,7 @@ Integration tests require local MongoDB and use disposable randomly named databa
 | Document | Contents |
 | --- | --- |
 | [FEATURES.md](FEATURES.md) | Detailed behavior, API contracts and historical phase notes |
-| [DEMO.md](DEMO.md) | Sample accounts, isolated seeding and demo walkthrough |
+| [sample.md](sample.md) | Sample accounts, isolated seeding and sample walkthrough |
 | [TESTING.md](TESTING.md) | Regression evidence and test limitations |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | Production build and hosting requirements |
 | [PUBLISHING.md](PUBLISHING.md) | Local Git and GitHub preparation |
@@ -81,7 +81,7 @@ Integration tests require local MongoDB and use disposable randomly named databa
 - Notifications reconcile on API access; no email, push or background scheduler is configured.
 - Login limits are process-local. Multiple instances require a shared limiter store.
 - Atlas connectivity, production hosting, load and physical-device testing are not verified.
-- Demo credentials and application environment files are local-only and ignored by Git.
+- sample credentials and application environment files are local-only and ignored by Git.
 
 All 20 development phases are complete locally. GitHub publication and production deployment have not been performed.
 

@@ -50,6 +50,6 @@ export default function RegisterPage() {
       <button className="primary-button" disabled={busy || !options}>{busy ? 'Creating account…' : 'Create account'}<Icon name="arrow" /></button>
     </form>
     <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>
-    <p className="auth-footnote">{options?.demo ? 'College demo: choose Member, Trainer or Admin for your demo account.' : 'Trainer and admin accounts are provided by your administrator.'}</p>
+    <p className="auth-footnote">{options?.sample ? 'Choose Member, Trainer or Admin for your account.' : 'Trainer and admin accounts are provided by your administrator.'}</p>
   </section>;
 }

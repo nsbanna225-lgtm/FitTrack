@@ -9,7 +9,7 @@ The included `render.yaml` builds the frontend and backend as one web service. E
 3. In Render, create a Blueprint from the GitHub repository and deploy `render.yaml`. Render generates `JWT_SECRET`; enter the Atlas URI when prompted for `MONGODB_URI`.
 4. Wait for `/api/health` to pass, then open the Render HTTPS URL and sign in. Install from the browser menu: Chrome on Android, or Safari Share → Add to Home Screen on iPhone.
 
-The Blueprint uses Render's free web-service plan, which may sleep when idle. This is suitable for a college demo but can make the first request slow, and background reminders are not reliable while the service is asleep. Choose an always-on plan for dependable scheduled push reminders. Add the three `VAPID_*` values from the phone-push section below in the Render environment settings to enable push.
+The Blueprint uses Render's free web-service plan, which may sleep when idle. This is suitable for a college sample but can make the first request slow, and background reminders are not reliable while the service is asleep. Choose an always-on plan for dependable scheduled push reminders. Add the three `VAPID_*` values from the phone-push section below in the Render environment settings to enable push.
 
 For other hosts, build with `npm ci` and `npm run build` in `frontend/`. Serve `frontend/dist` from the Express app or a static host configured to proxy `/api` to Express before applying the `index.html` fallback. Keep frontend and API on the same origin; CORS is not configured. Vite dev/preview is for local development, not the production service.
 
@@ -23,4 +23,4 @@ Phone push is optional. From `backend/`, run `npx web-push generate-vapid-keys` 
 
 Keep MongoDB private and configure authenticated access, backups and restore procedures for a real deployment. Use GET /api/health for liveness and GET /api/ready for database readiness. Configure trusted proxy handling for your actual proxy topology before relying on client-IP rate limits. Do not broadly trust arbitrary forwarding headers. Multiple API instances need shared rate-limit storage.
 
-Do not deploy the local demo environment or enable real-money claims. Password-reset delivery, transactional payment integration, monitoring, load tests and production/Atlas connectivity remain separate work. No production deployment was performed in this phase.
+Do not deploy the local sample environment or enable real-money claims. Password-reset delivery, transactional payment integration, monitoring, load tests and production/Atlas connectivity remain separate work. No production deployment was performed in this phase.

@@ -7,8 +7,8 @@ FitTrack/
   .github/workflows/verify.yml   CI: tests, MongoDB integration and frontend build
   backend/
     .env.example                Public environment template
-    integration/                Database-backed feature and demo tests
-    scripts/                    Admin bootstrap, database check, demo seeder, UI fixtures
+    integration/                Database-backed feature and sample tests
+    scripts/                    Admin bootstrap, database check, sample seeder, UI fixtures
     src/
       config/                   Environment and MongoDB connection
       controllers/              HTTP request/response mapping
@@ -42,7 +42,7 @@ FitTrack/
     package-lock.json
   README.md                     Fresh-checkout start guide
   FEATURES.md                   Feature/API reference and historical phase details
-  DEMO.md                       Isolated demo setup and walkthrough
+  sample.md                       Isolated sample setup and walkthrough
   DEPLOYMENT.md                 Hosting requirements and limitations
   PUBLISHING.md                 Git/GitHub preparation
   TESTING.md                    Verification evidence and limits
@@ -51,4 +51,4 @@ FitTrack/
   phase*.png                    Recorded browser evidence
 ```
 
-backend/.env and backend/.env.demo.local are local-only and ignored. The prepared showcase database is outside the source tree in local MongoDB. frontend/dist and both node_modules directories are generated and ignored. No remote repository or production deployment has been created.
+backend/.env and backend/.env.sample.local are local-only and ignored. The prepared showcase database is outside the source tree in local MongoDB. frontend/dist and both node_modules directories are generated and ignored. No remote repository or production deployment has been created.

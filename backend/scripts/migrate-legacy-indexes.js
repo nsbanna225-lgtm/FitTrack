@@ -26,6 +26,26 @@ try {
       await records.dropIndex(name);
     }
   }
+  // Older attendance collections may have the auto-generated compound unique
+  // index without the current partial filter. Recreate it with the filter so
+  // startup can safely create the current model index.
+  const attendance = db.collection('attendances');
+  if (await db.listCollections({ name: 'attendances' }).hasNext()) {
+    const name = 'memberId_1_day_1';
+    const index = (await attendance.indexes()).find(row => row.name === name);
+    if (index?.unique && !index.partialFilterExpression) {
+      if (JSON.stringify(index.key) !== JSON.stringify({ memberId: 1, day: 1 })) throw new Error(`Unexpected index definition: attendances.${name}`);
+      console.log(`${apply ? 'Repair' : 'Would repair'} attendances.${name}`);
+      if (apply) {
+        await attendance.dropIndex(name);
+        await attendance.dropIndex(`${name}_legacy_valid`).catch(() => {});
+        await attendance.createIndex({ memberId: 1, day: 1 }, {
+          name, unique: true,
+          partialFilterExpression: { memberId: { $type: 'objectId' }, day: { $type: 'string' } },
+        });
+      }
+    }
+  }
 } finally {
   await mongoose.disconnect();
 }

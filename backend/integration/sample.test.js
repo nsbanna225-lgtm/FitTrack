@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import {seedDemo,demoDatabase,demoModels} from '../scripts/demo-data.js';
+import {seedsample,sampleDatabase,sampleModels} from '../scripts/sample-data.js';
 import User from '../src/models/User.js';
 import Membership from '../src/models/Membership.js';
 import Payment from '../src/models/Payment.js';
@@ -12,22 +12,22 @@ import Trainer from '../src/models/Trainer.js';
 import {covered,withinHours} from '../src/services/sessionService.js';
 import {candidates} from '../src/services/notificationService.js';
 import {membershipView} from '../src/services/membershipService.js';
-test('demo database names cannot target application/system databases',()=>{
- for(const name of ['fittrack','admin','fittrack_demo/other','fittrack_demo?x=1','FITTRACK_DEMO','fittrack_demo_']) assert.throws(()=>demoDatabase(name));
- assert.equal(demoDatabase(),'fittrack_demo');
+test('sample database names cannot target application/system databases',()=>{
+ for(const name of ['fittrack','admin','fittrack_sample/other','fittrack_sample?x=1','FITTRACK_sample','fittrack_sample_']) assert.throws(()=>sampleDatabase(name));
+ assert.equal(sampleDatabase(),'fittrack_sample');
 });
-test('demo seed creates coherent fixtures and preserves data on rerun',{timeout:30000},async t=>{
- const database=`fittrack_demo_test_${randomBytes(8).toString('hex')}`;
+test('sample seed creates coherent fixtures and preserves data on rerun',{timeout:30000},async t=>{
+ const database=`fittrack_sample_test_${randomBytes(8).toString('hex')}`;
  const password=randomBytes(18).toString('hex'), now=new Date();
  try {
   await mongoose.connect(`mongodb://127.0.0.1:27017/${database}`,{serverSelectionTimeoutMS:5000});
   await t.test('unknown nonempty database is refused without removing its data',async()=>{
    await mongoose.connection.db.collection('sentinel').insertOne({_id:'keep',value:42});
-   await assert.rejects(seedDemo({password,now}),/nonempty/);
+   await assert.rejects(seedsample({password,now}),/nonempty/);
    assert.equal((await mongoose.connection.db.collection('sentinel').findOne({_id:'keep'})).value,42);
    await mongoose.connection.db.collection('sentinel').deleteOne({_id:'keep'});
   });
-  const result=await seedDemo({password,now});
+  const result=await seedsample({password,now});
   await t.test('all roles and feature records exist without exposing passwords',async()=>{
    assert.equal(result.counts.User,8);assert.equal(result.counts.Progress,5);assert.equal(result.counts.Session,3);assert.equal(result.counts.Payment,6);assert.equal(result.counts.WorkoutAssignment,1);
    assert.ok(!JSON.stringify(result).includes(password));
@@ -57,12 +57,12 @@ test('demo seed creates coherent fixtures and preserves data on rerun',{timeout:
    assert.ok(reminders.includes('membership_expiry'));assert.ok(reminders.includes('payment_reminder'));
   });
   await t.test('rerun preserves edits, passwords, timestamps and counts',async()=>{
-   await User.updateOne({email:'member@fittrack.example.test'},{$set:{name:'Edited Demo'}});
-   const before=Object.fromEntries(await Promise.all(demoModels.map(async m=>[m.modelName,await m.countDocuments()])));
-   const again=await seedDemo({password:randomBytes(18).toString('hex')});
+   await User.updateOne({email:'member@fittrack.example.test'},{$set:{name:'Edited sample'}});
+   const before=Object.fromEntries(await Promise.all(sampleModels.map(async m=>[m.modelName,await m.countDocuments()])));
+   const again=await seedsample({password:randomBytes(18).toString('hex')});
    assert.equal(again.alreadySeeded,true);assert.equal(again.seededAt,result.seededAt);assert.deepEqual(again.counts,before);
    const member=await User.findOne({email:'member@fittrack.example.test'}).select('+passwordHash');
-   assert.equal(member.name,'Edited Demo');assert.equal(await bcrypt.compare(password,member.passwordHash),true);
+   assert.equal(member.name,'Edited sample');assert.equal(await bcrypt.compare(password,member.passwordHash),true);
   });
  } finally {
   if(mongoose.connection.name===database) await mongoose.connection.dropDatabase();

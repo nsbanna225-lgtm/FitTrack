@@ -5,7 +5,7 @@ import { AppError } from '../utils/AppError.js';
 const pageSize = 10;
 const literal = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const pagination = (total, page) => ({ total, page, pages: Math.ceil(total / pageSize) });
-const serialize = row => ({ id: String(row._id), memberId: String(row.memberId), memberName: row.memberName, day: row.day, checkedInAt: row.checkedInAt, source: row.source });
+const serialize = row => ({ id: String(row._id), memberId: String(row.memberId), memberName: row.memberName, day: row.day, checkedInAt: row.checkedInAt, source: row.source, status: row.status || 'present' });
 export function percentage(createdAt, from, to, attendedDays) {
   const start = [from, new Date(createdAt).toISOString().slice(0, 10)].sort().at(-1);
   const elapsedDays = Math.max(0, Math.round((Date.parse(to) - Date.parse(start)) / 86400000) + 1);
@@ -22,6 +22,15 @@ export async function checkIn(input, actor, now = new Date()) {
     throw error;
   }
 }
+export async function mark(input, actor) {
+  const member = await User.findOne({ _id: input.memberId, role: { $in: ['member', 'trainer'] }, active: true, archivedAt: null }).lean();
+  if (!member) throw new AppError(404, 'Active member or trainer not found.');
+  const update = { memberName: member.name, recordedBy: actor.id, source: 'admin', status: input.status };
+  const operation = { $set: update };
+  if (input.status === 'present') update.checkedInAt = new Date(`${input.day}T12:00:00.000Z`);
+  else operation.$unset = { checkedInAt: 1 };
+  return serialize(await Attendance.findOneAndUpdate({ memberId: member._id, day: input.day }, operation, { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }));
+}
 export async function history(input, actor, now = new Date()) {
   const memberId = actor.role === 'member' ? actor.id : input.memberId;
   const filter = { day: { $gte: input.from, $lte: input.to }, ...(memberId ? { memberId } : {}), ...(input.q ? { memberName: { $regex: literal(input.q), $options: 'i' } } : {}) };
@@ -33,20 +42,20 @@ export async function history(input, actor, now = new Date()) {
   const [records, total, today] = await Promise.all([
     Attendance.find(filter).sort({ checkedInAt: -1, _id: -1 }).skip((input.page - 1) * pageSize).limit(pageSize).lean(),
     Attendance.countDocuments(filter),
-    memberId ? Attendance.exists({ memberId, day: now.toISOString().slice(0, 10) }) : null,
+    memberId ? Attendance.exists({ memberId, day: now.toISOString().slice(0, 10), status: { $ne: 'absent' } }) : null,
   ]);
   // Search narrows history only; percentage always uses all of the member's check-ins.
-  const days = member ? await Attendance.countDocuments({ memberId, day: filter.day }) : null;
+  const days = member ? await Attendance.countDocuments({ memberId, day: filter.day, status: { $ne: 'absent' } }) : null;
   return { records: records.map(serialize), pagination: pagination(total, input.page), period: { from: input.from, to: input.to, timezone: 'UTC' },
     summary: member ? { memberName: member.name, ...percentage(member.createdAt, input.from, input.to, days), checkedInToday: Boolean(today) } : null };
 }
 export async function report(input) {
-  const filter = { role: 'member', createdAt: { $lt: new Date(Date.parse(input.to) + 86400000) }, ...(input.memberId ? { _id: new mongoose.Types.ObjectId(input.memberId) } : {}), ...(input.q ? { name: { $regex: literal(input.q), $options: 'i' } } : {}) };
+  const filter = { role: input.kind === 'trainer' ? 'trainer' : 'member', createdAt: { $lt: new Date(Date.parse(input.to) + 86400000) }, ...(input.memberId ? { _id: new mongoose.Types.ObjectId(input.memberId) } : {}), ...(input.q ? { name: { $regex: literal(input.q), $options: 'i' } } : {}) };
   const [members, total] = await Promise.all([
     User.find(filter).select('name createdAt active archivedAt').sort({ name: 1, _id: 1 }).skip((input.page - 1) * pageSize).limit(pageSize).lean(),
     User.countDocuments(filter),
   ]);
-  const counts = await Attendance.aggregate([{ $match: { memberId: { $in: members.map(member => member._id) }, day: { $gte: input.from, $lte: input.to } } }, { $group: { _id: '$memberId', count: { $sum: 1 } } }]).option({ maxTimeMS: 5000 });
+  const counts = await Attendance.aggregate([{ $match: { memberId: { $in: members.map(member => member._id) }, day: { $gte: input.from, $lte: input.to }, status: { $ne: 'absent' } } }, { $group: { _id: '$memberId', count: { $sum: 1 } } }]).option({ maxTimeMS: 5000 });
   return { records: members.map(member => ({ id: String(member._id), name: member.name, active: member.active && !member.archivedAt, ...percentage(member.createdAt, input.from, input.to, counts.find(row => String(row._id) === String(member._id))?.count || 0) })), pagination: pagination(total, input.page), period: { from: input.from, to: input.to, timezone: 'UTC' } };
 }
 export async function attendanceStats(now = new Date()) {

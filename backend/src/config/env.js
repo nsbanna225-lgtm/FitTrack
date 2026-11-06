@@ -35,8 +35,8 @@ export function readPushEnv(source = process.env) {
   return { publicKey, privateKey, subject };
 }
 
-// Explicit opt-in for college demos. Unset flags and non-development environments stay Member-only.
+// Explicit opt-in for college samples. Unset flags and non-development environments stay Member-only.
 export function readRegistrationOptions(source = process.env) {
-  const demo = source.NODE_ENV === 'development' && source.DEMO_ROLE_REGISTRATION === 'true';
-  return { demo, roles: demo ? ['member', 'trainer', 'admin'] : ['member'] };
+  const sample = source.NODE_ENV === 'development' && source.sample_ROLE_REGISTRATION === 'true';
+  return { sample, roles: sample ? ['member', 'trainer', 'admin'] : ['member'] };
 }

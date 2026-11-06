@@ -169,7 +169,7 @@ npm run dev
 
 Results on September 24, 2026: 11 frontend tests, 13 backend tests, and 14 authentication integration scenarios passed (15 reported integration tests including the parent). The Vite production build passed.
 
-Inspection used Get-Content and rg --files for source, tests, package manifests, and documentation. Temporary Node scripts piped to node --input-type=module created three uniquely identified browser-test accounts, then deleted exactly those accounts using both their IDs and emails. No permanent demo credentials were added. The integration suite used its own isolated database and removed it afterward.
+Inspection used Get-Content and rg --files for source, tests, package manifests, and documentation. Temporary Node scripts piped to node --input-type=module created three uniquely identified browser-test accounts, then deleted exactly those accounts using both their IDs and emails. No permanent sample credentials were added. The integration suite used its own isolated database and removed it afterward.
 
 Browser checks: guest redirection and safe post-login return, member profile saving, logout, trainer workspace, and admin workspace. The initial implementation also exercised registration and mobile profile/navigation. Browser session access ended before the final role-change UI check; server-side role enforcement passed the integration suite. All three temporary browser-test accounts were removed.
 
@@ -329,7 +329,7 @@ Commands executed from the corresponding backend/frontend directory:
 
 The UI fixture prints its run-specific stopFile path. Creating that exact file requests server shutdown and removal of only its own database; it also supports Enter, shutdown signals, and a 15-minute cleanup timer. The interrupted earlier run's database was removed after validating its exact name and all three fixture identities. The completion run exited successfully with “Disposable notification database removed.” Application data was preserved.
 
-Browser checks passed for all five categories, mark-read with unread badge update, read filtering, workout detail navigation, and paid demo payment reminder removal. At 390px the document width and scroll width were both 375px, with readable filters and notification cards. Saved phase14-notifications.png and phase14-mobile.png, reset viewport, and closed the test tab. Trainer/admin UI flows were not separately checked; automated integration tests cover role behavior. Updated README.md, STRUCTURE.md, and PHASES.md. Phase 14 is complete; Phase 15 has not started.
+Browser checks passed for all five categories, mark-read with unread badge update, read filtering, workout detail navigation, and paid sample payment reminder removal. At 390px the document width and scroll width were both 375px, with readable filters and notification cards. Saved phase14-notifications.png and phase14-mobile.png, reset viewport, and closed the test tab. Trainer/admin UI flows were not separately checked; automated integration tests cover role behavior. Updated README.md, STRUCTURE.md, and PHASES.md. Phase 14 is complete; Phase 15 has not started.
 
 ## Phase 15 verification — September 30, 2026
 
@@ -344,7 +344,7 @@ Implemented admin-only analytics, strict date/interval validation, aggregate rep
 
 Initial analytics test fixtures were corrected to await collection/index initialization and provide distinct attendance days, payment period IDs and session reservations. The resulting suite verifies zero-filled periods, calendar/time bounds, daily/monthly totals, distinct visitors, retained history, simulated paid revenue, invalid input, admin-only access, and no-store responses.
 
-Browser verification: admin login and navigation, populated monthly report (10 registrations, 9 visits, 1 visitor, INR 11,250 demo revenue), matching revenue chart/table, daily zero-revenue dates, and mobile menu all passed. Filter styling was refined. A mobile currency wrap was fixed by using one summary card per row. The final 390px viewport had 375px document and scroll widths; summary amounts and chart labels remained readable. Screenshots: phase15-analytics.png and phase15-mobile.png. Reset viewport and closed the browser tab.
+Browser verification: admin login and navigation, populated monthly report (10 registrations, 9 visits, 1 visitor, INR 11,250 sample revenue), matching revenue chart/table, daily zero-revenue dates, and mobile menu all passed. Filter styling was refined. A mobile currency wrap was fixed by using one summary card per row. The final 390px viewport had 375px document and scroll widths; summary amounts and chart labels remained readable. Screenshots: phase15-analytics.png and phase15-mobile.png. Reset viewport and closed the browser tab.
 
 Requested cleanup by creating this fixture's printed, identity-specific stopFile. The fixture closes its server and removes only its own randomly named database. Application data was preserved. Phase 15 is complete; Phase 16 has not started.
 
@@ -379,12 +379,12 @@ Created TESTING.md with defect evidence, test scope and limitations. No browser 
 
 ## Phase 19 verification — September 30, 2026
 
-- node --test integration/demo.test.js: 7 reported results passed (six scenarios and one parent).
+- node --test integration/sample.test.js: 7 reported results passed (six scenarios and one parent).
 - npm run test:integration: 123 passed, zero failed/skipped.
-- Prepared local showcase fittrack_demo_showcase_4a68d92d via seed-demo.js with random password; credentials/config saved using exclusive creation in ignored backend/.env.demo.local. Existing .env preserved.
+- Prepared local showcase fittrack_sample_showcase_4a68d92d via seed-sample.js with random password; credentials/config saved using exclusive creation in ignored backend/.env.sample.local. Existing .env preserved.
 - HTTP verification: admin/trainer/member login passed; admin analytics/members/payments and trainer/member sessions/notifications reads returned 200. Temporary server closed and MongoDB disconnected.
 
-Added DEMO.md. Showcase retained intentionally for use; isolated regression databases cleaned by tests. No frontend code changes or new dependencies. Phase 19 complete; Phase 20 has not started.
+Added sample.md. Showcase retained intentionally for use; isolated regression databases cleaned by tests. No frontend code changes or new dependencies. Phase 19 complete; Phase 20 has not started.
 
 ## Phase 20 verification — September 30, 2026
 

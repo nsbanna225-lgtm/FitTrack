@@ -10,7 +10,7 @@
     "check:db": "node scripts/check-database.js",
     "test:integration": "node --test integration/*.test.js",
     "create:admin": "node scripts/create-admin.js",
-    "seed:demo": "node scripts/seed-demo.js"
+    "seed:sample": "node scripts/seed-sample.js"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -12,8 +12,14 @@ export function checkIn(body, role) {
   object(body, role === 'admin' ? ['memberId'] : []);
   return role === 'admin' ? { memberId: id(body.memberId) } : {};
 }
+export function mark(body, role) {
+  if (role !== 'admin') bad('Only admins can assign attendance.');
+  object(body, ['memberId', 'day', 'status']);
+  if (!['present', 'absent'].includes(body.status)) bad('Status must be present or absent.');
+  return { memberId: id(body.memberId), day: date(body.day), status: body.status };
+}
 export function list(query, role, now = new Date()) {
-  object(query, ['from', 'to', 'page', ...(role === 'admin' ? ['memberId', 'q'] : [])]);
+  object(query, ['from', 'to', 'page', ...(role === 'admin' ? ['memberId', 'q', 'kind'] : [])]);
   if (Object.values(query).some(value => typeof value !== 'string')) bad('Invalid query parameters.');
   const today = now.toISOString().slice(0, 10);
   const from = date(query.from ?? `${today.slice(0, 7)}-01`), to = date(query.to ?? today);
@@ -21,5 +27,6 @@ export function list(query, role, now = new Date()) {
   if (query.page !== undefined && !/^[1-9][0-9]{0,5}$/.test(query.page)) bad('Invalid page.');
   const q = (query.q ?? '').trim();
   if (q.length > 100) bad('Search must contain at most 100 characters.');
-  return { from, to, page: Number(query.page || 1), q, ...(query.memberId !== undefined ? { memberId: id(query.memberId) } : {}) };
+  const kind = query.kind === 'trainer' ? 'trainer' : 'member';
+  return { from, to, page: Number(query.page || 1), q, kind, ...(query.memberId !== undefined ? { memberId: id(query.memberId) } : {}) };
 }

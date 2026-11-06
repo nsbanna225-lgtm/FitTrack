@@ -31,9 +31,9 @@ try {
   await mongoose.connect(`mongodb://127.0.0.1:27017/${database}`);
   await Promise.all([User.init(), Attendance.init(), Payment.init(), Session.init()]);
   const password = randomBytes(18).toString('hex'), passwordHash = await bcrypt.hash(password, 12);
-  const member = await User.create({ name: 'Analytics Demo Member', email: 'member@analytics-ui.example.test', role: 'member', passwordHash });
-  const trainer = await User.create({ name: 'Analytics Demo Trainer', email: 'trainer@analytics-ui.example.test', role: 'trainer', passwordHash });
-  const admin = await User.create({ name: 'Analytics Demo Admin', email: 'admin@analytics-ui.example.test', role: 'admin', passwordHash });
+  const member = await User.create({ name: 'Analytics sample Member', email: 'member@analytics-ui.example.test', role: 'member', passwordHash });
+  const trainer = await User.create({ name: 'Analytics sample Trainer', email: 'trainer@analytics-ui.example.test', role: 'trainer', passwordHash });
+  const admin = await User.create({ name: 'Analytics sample Admin', email: 'admin@analytics-ui.example.test', role: 'admin', passwordHash });
   const startAt = new Date(Date.now() + 3600000);
   await Session.create({ memberId: member._id, trainerId: trainer._id, memberName: member.name, trainerName: trainer.name, timezone: 'Asia/Kolkata', startAt, endAt: new Date(+startAt + 3600000), createdBy: member._id, updatedBy: member._id });
   const plan = await MembershipPlan.create({ name: 'Strength Monthly', nameKey: 'strength monthly', durationDays: 30, priceMinor: 149900, features: [] });
@@ -44,7 +44,7 @@ try {
   await WorkoutAssignment.create({ planId: new mongoose.Types.ObjectId(), planVersion: 1, memberId: member._id, memberName: member.name, trainerName: trainer.name, assignedBy: trainer._id, name: 'Strength & mobility', items: [{ exerciseId: new mongoose.Types.ObjectId(), name: 'Bodyweight squat', day: 1, sets: 3, reps: 10, restSeconds: 60 }], itemCount: 1, completed: [false] });
   for (let i = 1; i <= 9; i++) {
     const at = new Date(Date.now() - i * 8 * 86400000);
-    await User.collection.insertOne({ name: `Demo member ${i}`, email: `demo${i}@analytics-ui.example.test`, role: 'member', active: true, createdAt: at });
+    await User.collection.insertOne({ name: `sample member ${i}`, email: `sample${i}@analytics-ui.example.test`, role: 'member', active: true, createdAt: at });
     await Attendance.create({ memberId: member._id, memberName: member.name, day: at.toISOString().slice(0,10), checkedInAt: at, recordedBy: admin._id, source: 'admin' });
     await Payment.create({ memberId: member._id, periodId: new mongoose.Types.ObjectId(), memberName: member.name, planName: plan.name, startAt: at, expiresAt: new Date(+at + 30*86400000), amountMinor: 100000 + i * 5000, status: 'paid', paidAt: at });
     await Session.create({ memberId: member._id, trainerId: trainer._id, memberName: member.name, trainerName: trainer.name, timezone: 'UTC', startAt: at, endAt: new Date(+at + 3600000), status: i % 3 ? 'completed' : 'cancelled', createdBy: admin._id, updatedBy: admin._id });

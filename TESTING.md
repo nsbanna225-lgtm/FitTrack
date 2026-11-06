@@ -27,11 +27,11 @@ Integration coverage includes authorization and ownership, malformed input, toke
 
 Session races use controlled callbacks and deferred adapter responses so they can be reproduced deterministically. Browser checks from Phase 16 remain recorded in COMMANDS.md; they were not rerun for these nonvisual changes. There is no automated browser end-to-end suite or coverage-percentage claim. Physical-device/cross-browser testing, production deployment, load testing, Atlas connectivity, live payments and password-reset email delivery were not verified by this phase.
 
-Phase 18 is complete. Phase 19 (demo/sample data) is next.
+Phase 18 is complete. Phase 19 (sample/sample data) is next.
 
 ## Final verification — Phase 20
 
-September 30, 2026: backend tests 18 passed; integration results 123 passed (110 scenarios plus 13 parent tests); frontend tests 21 passed; production build passed. Dependency manifest/lockfile agreement checked for both packages. A scan of 200 publishable text files found no literal copies of the known local JWT/demo password values; this is not a general-purpose secret audit.
+September 30, 2026: backend tests 18 passed; integration results 123 passed (110 scenarios plus 13 parent tests); frontend tests 21 passed; production build passed. Dependency manifest/lockfile agreement checked for both packages. A scan of 200 publishable text files found no literal copies of the known local JWT/sample password values; this is not a general-purpose secret audit.
 
 All route pages now load on demand through lazy/Suspense with an error fallback for failed rendering/chunk loads. Shared styles load in a fixed order, ending with responsive overrides. Previous single JavaScript bundle: 463.09 kB (134.51 kB gzip). New entry: 270.64 kB, with 61.69 kB of modulepreloads (332.33 kB combined before the route chunk, about 28% less). The landing page adds its own 4.00 kB chunk; total application code is not reduced by that percentage. No runtime speed or Lighthouse result is claimed.
 

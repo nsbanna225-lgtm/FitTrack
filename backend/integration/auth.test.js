@@ -14,7 +14,7 @@ import { authLimiter, loginLimiter } from '../src/middleware/authRateLimit.js';
 const databaseName = `fittrack_test_${randomUUID().replaceAll('-', '')}`;
 process.env.JWT_SECRET = randomBytes(48).toString('hex');
 process.env.NODE_ENV = 'development';
-process.env.DEMO_ROLE_REGISTRATION = 'false';
+process.env.sample_ROLE_REGISTRATION = 'false';
 const password = 'Test-password-only-123!';
 const nextPassword = 'New-test-password-456!';
 let base;
@@ -189,16 +189,16 @@ test('authentication integration with isolated MongoDB', { timeout: 120000 }, as
       await User.deleteOne({ _id: admin._id });
       assert.equal((await request('/me', { token: adminToken })).status, 401);
     });
-    await t.test('demo signup for all roles preserves password, JWT, login matching and route authorization', async () => {
+    await t.test('sample signup for all roles preserves password, JWT, login matching and route authorization', async () => {
       // Independent scenario: previous cases deliberately consumed this client's failure budget.
       authLimiter.resetKey('127.0.0.1');
       loginLimiter.resetKey('127.0.0.1');
-      process.env.DEMO_ROLE_REGISTRATION = 'true';
+      process.env.sample_ROLE_REGISTRATION = 'true';
       try {
-        assert.deepEqual((await request('/registration-options')).data, { demo: true, roles: ['member', 'trainer', 'admin'] });
+        assert.deepEqual((await request('/registration-options')).data, { sample: true, roles: ['member', 'trainer', 'admin'] });
         for (const role of ['member', 'trainer', 'admin']) {
-          const email = `demo-${role}@example.test`;
-          const body = { name: `Demo ${role}`, email, password, role };
+          const email = `sample-${role}@example.test`;
+          const body = { name: `sample ${role}`, email, password, role };
           const created = await request('/register', { method: 'POST', body });
           assert.equal(created.status, 201);
           assert.equal(created.data.user.role, role);
@@ -226,11 +226,11 @@ test('authentication integration with isolated MongoDB', { timeout: 120000 }, as
         }
         assert.equal((await request('/register', { method: 'POST', body: { name: 'Bad Role', email: 'bad-role@example.test', password, role: 'owner' } })).status, 400);
         process.env.NODE_ENV = 'production';
-        assert.deepEqual((await request('/registration-options')).data, { demo: false, roles: ['member'] });
+        assert.deepEqual((await request('/registration-options')).data, { sample: false, roles: ['member'] });
         for (const role of ['admin', 'trainer']) assert.equal((await request('/register', { method: 'POST', body: { name: 'Blocked Role', email: 'blocked@example.test', password, role } })).status, 400);
       } finally {
         process.env.NODE_ENV = 'development';
-        process.env.DEMO_ROLE_REGISTRATION = 'false';
+        process.env.sample_ROLE_REGISTRATION = 'false';
       }
     });
     await t.test('repeated unsuccessful logins are rate limited', async () => {

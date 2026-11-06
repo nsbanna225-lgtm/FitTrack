@@ -23,8 +23,8 @@ try {
   await Payment.createIndexes();
   const password = randomBytes(18).toString('hex');
   const passwordHash = await bcrypt.hash(password, 12);
-  const member = await User.create({ name: 'Payment Demo Member', email: 'member@payment-ui.example.test', role: 'member', passwordHash });
-  const admin = await User.create({ name: 'Payment Demo Admin', email: 'admin@payment-ui.example.test', role: 'admin', passwordHash });
+  const member = await User.create({ name: 'Payment sample Member', email: 'member@payment-ui.example.test', role: 'member', passwordHash });
+  const admin = await User.create({ name: 'Payment sample Admin', email: 'admin@payment-ui.example.test', role: 'admin', passwordHash });
   const plan = await MembershipPlan.create({ name: 'Strength Monthly', nameKey: 'strength monthly', durationDays: 30, priceMinor: 149900, features: [] });
   const startAt = new Date(); startAt.setUTCHours(0, 0, 0, 0);
   await enroll(member.id, { planId: plan.id, startAt }, admin.id);

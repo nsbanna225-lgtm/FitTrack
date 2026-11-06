@@ -1,6 +1,6 @@
 # Feature reference and implementation history
 
-Advanced Fitness Management System. Completed: project foundation, MongoDB configuration, backend authentication/authorization, and frontend authentication with separate admin, trainer, and member layouts. The admin dashboard shows live account statistics, registration trends, recent members, and membership coverage. Member management, trainer management, and membership plans/enrollment/renewal are available. Session booking, role-specific schedules, and workout management are available. Attendance check-ins, history, percentages, and admin reports are available. Simulated membership payments, payment history, retries, and admin revenue totals are available. Fitness progress includes measurements, BMI, notes, history, charts, and workout completion. In-app notifications include booking updates, session reminders, membership expiry, demo payment reminders, and workout updates.
+Advanced Fitness Management System. Completed: project foundation, MongoDB configuration, backend authentication/authorization, and frontend authentication with separate admin, trainer, and member layouts. The admin dashboard shows live account statistics, registration trends, recent members, and membership coverage. Member management, trainer management, and membership plans/enrollment/renewal are available. Session booking, role-specific schedules, and workout management are available. Attendance check-ins, history, percentages, and admin reports are available. Simulated membership payments, payment history, retries, and admin revenue totals are available. Fitness progress includes measurements, BMI, notes, history, charts, and workout completion. In-app notifications include booking updates, session reminders, membership expiry, sample payment reminders, and workout updates.
 
 ## Requirements
 
@@ -46,8 +46,8 @@ All endpoints below use /api/auth. Send JSON bodies and Authorization: Bearer <a
 
 | Method | Path | Access | Request fields / behavior |
 | --- | --- | --- | --- |
-| GET | /registration-options | Public | Returns allowed signup roles and whether college demo signup is enabled |
-| POST | /register | Public | name, email, password, role, optional phone; Member-only by default, all three roles with development demo opt-in; returns user and success message |
+| GET | /registration-options | Public | Returns allowed signup roles and whether college sample signup is enabled |
+| POST | /register | Public | name, email, password, role, optional phone; Member-only by default, all three roles with development sample opt-in; returns user and success message |
 | POST | /login | Public | email, password, matching role; returns user, accessToken, tokenType, expiresIn |
 | GET | /me | Authenticated | Returns the current safe user profile |
 | PATCH | /me | Authenticated | Updates name and/or phone only |
@@ -65,7 +65,7 @@ Limits per IP: 100 authentication requests per 15 minutes, 10 unsuccessful login
 
 ## First admin
 
-Public registration creates members by default. The college demo opt-in (`NODE_ENV=development` and `DEMO_ROLE_REGISTRATION=true`) permits all three roles; production always stays Member-only. Run the one-time bootstrap locally with your chosen name, email, and password. No default admin account or fixed password has been created.
+Public registration creates members by default. The college sample opt-in (`NODE_ENV=development` and `sample_ROLE_REGISTRATION=true`) permits all three roles; production always stays Member-only. Run the one-time bootstrap locally with your chosen name, email, and password. No default admin account or fixed password has been created.
 
 From backend in PowerShell:
 
@@ -120,7 +120,7 @@ See STRUCTURE.md for the complete source tree and COMMANDS.md for commands and i
 
 ## Phase 4: frontend authentication and layouts
 
-Public routes: /login, /register, /forgot-password, and /reset-password?token=... . Registration creates members by default and supports all three roles only with the development demo opt-in described in README.md. Each role has its own workspace at /admin, /trainer, or /member, with /profile and /security pages. Trainer and member overview cards describe upcoming modules. Admins see the live dashboard described below.
+Public routes: /login, /register, /forgot-password, and /reset-password?token=... . Registration creates members by default and supports all three roles only with the development sample opt-in described in README.md. Each role has its own workspace at /admin, /trainer, or /member, with /profile and /security pages. Trainer and member overview cards describe upcoming modules. Admins see the live dashboard described below.
 
 Guests are redirected to login and returned to an allowed page for their role after signing in. Unauthorized roles see an access-denied page. Unknown routes show a not-found page. Profile updates persist through the API. Password changes revoke sessions; incorrect current passwords preserve a still-valid session. Logout revokes all devices. Session expiry clears the in-memory identity, and stale API responses cannot overwrite a newer session.
 
@@ -292,7 +292,7 @@ Verification on September 29, 2026: 13 backend tests, 12 frontend tests, and 83 
 
 ## Phase 12: simulated payments
 
-Members use /member/payments for their own enrollment and renewal payments. Admins use /admin/payments, with member profiles linking to a memberId-filtered view. Trainers cannot access payments. Demo mode is prominently labelled: no real money is collected and payment status does not change membership coverage.
+Members use /member/payments for their own enrollment and renewal payments. Admins use /admin/payments, with member profiles linking to a memberId-filtered view. Trainers cannot access payments. sample mode is prominently labelled: no real money is collected and payment status does not change membership coverage.
 
 Opening a saved membership period creates one pending payment or returns its existing record. The amount, currency, plan name, and coverage dates are copied from the saved enrollment price. A unique member/period index prevents duplicate concurrent charges. Pending payments can simulate success or failure; failed payments can retry to pending. Paid payments are immutable. Mutations require an active, non-archived member, expectedVersion for transitions, and atomic version checks. History is retained for inactive and archived members. Each payment retains up to 100 status events; further transitions are rejected at the limit.
 
@@ -357,7 +357,7 @@ All endpoints require authentication and send Cache-Control: no-store. Unexpecte
 
 Verification: 13 backend tests, 15 frontend tests, and 111 integration results (100 scenarios plus 11 parent tests) passed, as did the production build. Notification coverage includes concurrent synchronization, ownership, validation, persistent read state, role links, pagination, time boundaries, renewals, and source-state changes. No dependencies were added.
 
-Browser verification completed September 30, 2026: all five categories, read-state badge updates, read filter, workout detail link, and disappearance of a paid demo payment reminder passed. The 390px mobile viewport had no horizontal overflow (375px content width). Screenshots: phase14-notifications.png and phase14-mobile.png. Trainer/admin UI flows were not separately exercised; role behavior is covered by integration tests. The temporary browser server and its isolated database were cleaned up. Phase 15 (analytics and charts) is next.
+Browser verification completed September 30, 2026: all five categories, read-state badge updates, read filter, workout detail link, and disappearance of a paid sample payment reminder passed. The 390px mobile viewport had no horizontal overflow (375px content width). Screenshots: phase14-notifications.png and phase14-mobile.png. Trainer/admin UI flows were not separately exercised; role behavior is covered by integration tests. The temporary browser server and its isolated database were cleaned up. Phase 15 (analytics and charts) is next.
 
 ## Phase 15: analytics and charts
 
@@ -400,12 +400,12 @@ Verification: 18 backend unit/HTTP/startup tests, 116 integration results (104 s
 
 Reproduced and fixed three session-store regressions: accepting malformed identity fields, obsolete expiry callbacks clearing a replacement login, and unrelated/invalid profile responses replacing the authenticated user. Session expiry now uses a generation guard; identities require nonempty string IDs/names and supported roles; profile updates must match the current user and token. Lifetimes exceeding the JavaScript timer range are rejected. Valid role changes remain supported.
 
-Added five frontend regressions, including delayed unauthorized responses, server failures and request cancellation. Final results: 21 frontend tests, 18 backend tests, 116 integration results (104 scenarios plus 12 parents), and the production build passed. See TESTING.md for red-before/green-after evidence, scope and remaining test limitations. No dependencies added. Phase 19 (demo/sample data) is next.
+Added five frontend regressions, including delayed unauthorized responses, server failures and request cancellation. Final results: 21 frontend tests, 18 backend tests, 116 integration results (104 scenarios plus 12 parents), and the production build passed. See TESTING.md for red-before/green-after evidence, scope and remaining test limitations. No dependencies added. Phase 19 (sample/sample data) is next.
 
 
-## Phase 19: demo/sample data
+## Phase 19: sample/sample data
 
-See DEMO.md for the prepared local showcase, active account emails, private password-file location and launch commands. npm run seed:demo creates role-based sample data only in a dedicated local fittrack_demo database (or permitted suffix). It refuses unrelated nonempty data and preserves completed seed runs without changing edits or passwords. Failed/incomplete runs require a fresh database suffix; no reset or deletion is performed.
+See sample.md for the prepared local showcase, active account emails, private password-file location and launch commands. npm run seed:sample creates role-based sample data only in a dedicated local fittrack_sample database (or permitted suffix). It refuses unrelated nonempty data and preserves completed seed runs without changing edits or passwords. Failed/incomplete runs require a fresh database suffix; no reset or deletion is performed.
 
 Includes memberships, simulated payments, availability and reserved sessions, attendance, progress, workout completion, inactive/archived members and naturally derived notifications. Seven new integration results passed; full suite now has 123 passing results. All three prepared roles passed real HTTP login and feature-read checks. No dependencies added. The normal application database and .env were preserved. Phase 20 is next.
 

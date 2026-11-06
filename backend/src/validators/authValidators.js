@@ -25,12 +25,12 @@ function validatePhone(value) {
   if (typeof value !== 'string' || value.length > 25 || !/^[0-9+() .-]*$/.test(value)) invalid('Phone number is invalid.');
   return value.trim();
 }
-export function validateRegistration(body, staff = false, demo = false) {
+export function validateRegistration(body, staff = false, sample = false) {
   bodyObject(body, ['name', 'email', 'password', 'phone', 'role']);
   if (staff && !['admin', 'trainer'].includes(body.role)) invalid('Staff role must be admin or trainer.');
-  const role = body.role === undefined && !demo ? 'member' : body.role;
+  const role = body.role === undefined && !sample ? 'member' : body.role;
   if (!staff && !['member', 'trainer', 'admin'].includes(role)) invalid('Select a valid role.');
-  if (!staff && !demo && role !== 'member') invalid('Public registration is limited to Member accounts.');
+  if (!staff && !sample && role !== 'member') invalid('Public registration is limited to Member accounts.');
   return { name: validateName(body.name), email: validateEmail(body.email), password: validatePassword(body.password),
     phone: body.phone === undefined ? '' : validatePhone(body.phone), role: staff ? body.role : role };
 }

@@ -7,7 +7,7 @@ import { readRegistrationOptions } from '../config/env.js';
 export function registrationOptions(_req, res) { res.json(readRegistrationOptions()); }
 
 export async function register(req, res) {
-  const user = await auth.createUser(validation.validateRegistration(req.body, false, readRegistrationOptions().demo));
+  const user = await auth.createUser(validation.validateRegistration(req.body, false, readRegistrationOptions().sample));
   res.status(201).json({ user: publicUser(user), message: 'Account created successfully. Please sign in.' });
 }
 export async function login(req, res) {

@@ -5,7 +5,7 @@ import useNotifications, { notificationsChanged } from '../hooks/useNotification
 import usePushNotifications from '../hooks/usePushNotifications.js';
 import api from '../services/api.js';
 import { errorMessage } from '../utils/auth.js';
-const categories = { booking: 'Booking updates', session_reminder: 'Upcoming sessions', membership_expiry: 'Membership expiry', payment_reminder: 'Demo payments', workout_update: 'Workout updates' };
+const categories = { booking: 'Booking updates', session_reminder: 'Upcoming sessions', membership_expiry: 'Membership expiry', payment_reminder: 'Payments', workout_update: 'Workout updates' };
 
 function InstallAppButton() {
   const [installPrompt, setInstallPrompt] = useState(null);

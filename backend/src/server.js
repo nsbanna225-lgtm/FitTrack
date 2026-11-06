@@ -59,9 +59,13 @@ try {
   configurePush(pushEnv);
   startupStage = 'MongoDB connection';
   await connectDatabase(env.mongoUri);
-  for (const model of [User, Attendance, Payment, Progress, Notification, PushSubscription, MembershipPlan, Session, Exercise, WorkoutPlan, WorkoutAssignment]) {
-    startupStage = `${model.modelName} indexes`;
-    await model.createIndexes();
+  if (process.env.SKIP_INDEX_SYNC !== 'true') {
+    for (const model of [User, Attendance, Payment, Progress, Notification, PushSubscription, MembershipPlan, Session, Exercise, WorkoutPlan, WorkoutAssignment]) {
+      startupStage = `${model.modelName} indexes`;
+      await model.createIndexes();
+    }
+  } else {
+    console.warn('Skipping index synchronization because SKIP_INDEX_SYNC=true.');
   }
   if (!shuttingDown) {
     console.log('MongoDB connected.');

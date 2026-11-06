@@ -18,8 +18,8 @@ test('registration rejects role injection and normalizes email', () => {
   assert.throws(() => validateRegistration({ ...valid, role: 'admin' }), /limited to Member/);
   assert.equal(validateRegistration({ ...valid, role: 'member' }).role, 'member');
 });
-test('demo registration accepts only supported explicit roles without relaxing other validation', () => {
-  const valid = { name: 'Demo User', email: ' DEMO@example.test ', password: 'long-safe-password' };
+test('sample registration accepts only supported explicit roles without relaxing other validation', () => {
+  const valid = { name: 'sample User', email: ' sample@example.test ', password: 'long-safe-password' };
   for (const role of ['member', 'trainer', 'admin']) assert.equal(validateRegistration({ ...valid, role }, false, true).role, role);
   for (const role of [undefined, null, '', 'owner', 'Admin', ['admin'], { $ne: null }]) {
     assert.throws(() => validateRegistration({ ...valid, role }, false, true), /Select a valid role/);

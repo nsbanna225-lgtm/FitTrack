@@ -2,15 +2,15 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readEnv, readPushEnv, readRegistrationOptions } from '../src/config/env.js';
 
-test('privileged demo registration requires explicit development opt-in', () => {
-  assert.deepEqual(readRegistrationOptions({ NODE_ENV: 'development', DEMO_ROLE_REGISTRATION: 'true' }), {
-    demo: true, roles: ['member', 'trainer', 'admin'],
+test('privileged sample registration requires explicit development opt-in', () => {
+  assert.deepEqual(readRegistrationOptions({ NODE_ENV: 'development', sample_ROLE_REGISTRATION: 'true' }), {
+    sample: true, roles: ['member', 'trainer', 'admin'],
   });
   for (const NODE_ENV of ['production', 'test', undefined, 'Development']) {
-    assert.deepEqual(readRegistrationOptions({ NODE_ENV, DEMO_ROLE_REGISTRATION: 'true' }), { demo: false, roles: ['member'] });
+    assert.deepEqual(readRegistrationOptions({ NODE_ENV, sample_ROLE_REGISTRATION: 'true' }), { sample: false, roles: ['member'] });
   }
-  for (const DEMO_ROLE_REGISTRATION of [undefined, 'false', 'TRUE', '1']) {
-    assert.equal(readRegistrationOptions({ NODE_ENV: 'development', DEMO_ROLE_REGISTRATION }).demo, false);
+  for (const sample_ROLE_REGISTRATION of [undefined, 'false', 'TRUE', '1']) {
+    assert.equal(readRegistrationOptions({ NODE_ENV: 'development', sample_ROLE_REGISTRATION }).sample, false);
   }
 });
 

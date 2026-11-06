@@ -23,9 +23,9 @@ try {
   await mongoose.connect(`mongodb://127.0.0.1:27017/${database}`);
   await Progress.createIndexes();
   const password = randomBytes(18).toString('hex'), passwordHash = await bcrypt.hash(password, 12);
-  const member = await User.create({ name: 'Progress Demo Member', email: 'member@progress-ui.example.test', role: 'member', passwordHash });
-  const trainer = await User.create({ name: 'Progress Demo Trainer', email: 'trainer@progress-ui.example.test', role: 'trainer', passwordHash });
-  await User.create({ name: 'Progress Demo Admin', email: 'admin@progress-ui.example.test', role: 'admin', passwordHash });
+  const member = await User.create({ name: 'Progress sample Member', email: 'member@progress-ui.example.test', role: 'member', passwordHash });
+  const trainer = await User.create({ name: 'Progress sample Trainer', email: 'trainer@progress-ui.example.test', role: 'trainer', passwordHash });
+  await User.create({ name: 'Progress sample Admin', email: 'admin@progress-ui.example.test', role: 'admin', passwordHash });
   await Member.create({ _id: member._id, assignedTrainer: trainer._id });
   for (const [days, weightKg] of [[30, 82], [15, 80]]) await Progress.create({ memberId: member._id, day: new Date(Date.now() - days * 86400000).toISOString().slice(0, 10), weightKg, heightCm: 180, waistCm: 90, notes: 'Disposable chart example.', recordedBy: member._id, updatedBy: member._id });
   const wrapper = express();

@@ -31,9 +31,9 @@ try {
   await mongoose.connect(`mongodb://127.0.0.1:27017/${database}`);
   await Notification.createIndexes();
   const password = randomBytes(18).toString('hex'), passwordHash = await bcrypt.hash(password, 12);
-  const member = await User.create({ name: 'Notification Demo Member', email: 'member@notification-ui.example.test', role: 'member', passwordHash });
-  const trainer = await User.create({ name: 'Notification Demo Trainer', email: 'trainer@notification-ui.example.test', role: 'trainer', passwordHash });
-  const admin = await User.create({ name: 'Notification Demo Admin', email: 'admin@notification-ui.example.test', role: 'admin', passwordHash });
+  const member = await User.create({ name: 'Notification sample Member', email: 'member@notification-ui.example.test', role: 'member', passwordHash });
+  const trainer = await User.create({ name: 'Notification sample Trainer', email: 'trainer@notification-ui.example.test', role: 'trainer', passwordHash });
+  const admin = await User.create({ name: 'Notification sample Admin', email: 'admin@notification-ui.example.test', role: 'admin', passwordHash });
   const startAt = new Date(Date.now() + 3600000);
   await Session.create({ memberId: member._id, trainerId: trainer._id, memberName: member.name, trainerName: trainer.name, timezone: 'Asia/Kolkata', startAt, endAt: new Date(+startAt + 3600000), createdBy: member._id, updatedBy: member._id });
   const plan = await MembershipPlan.create({ name: 'Strength Monthly', nameKey: 'strength monthly', durationDays: 30, priceMinor: 149900, features: [] });

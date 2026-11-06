@@ -54,7 +54,8 @@ export default function AppRoutes() {
           {role === 'member' && <Route path="membership" element={<MyMembershipPage/>}/>}
           <Route path="profile" element={<ProfilePage />} />
           {role !== 'trainer' && <Route path="attendance" element={<AttendancePage key="history" />} />}
-          {role === 'admin' && <Route path="attendance/report" element={<AttendancePage key="report" report />} />}
+          {role === 'admin' && <Route path="attendance/members" element={<AttendancePage key="member-report" report kind="member" />} />}
+          {role === 'admin' && <Route path="attendance/trainers" element={<AttendancePage key="trainer-report" report kind="trainer" />} />}
           {role !== 'trainer' && <Route path="payments" element={<PaymentsPage />} />}
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="progress" element={<ProgressPage />} />

@@ -46,7 +46,7 @@ export async function candidates(actor, now = new Date()) {
     if (expired && expired.expiresAt > plus(now, -7 * DAY)) add(`expiry:${expired._id}:expired`, 'membership_expiry', 'Membership has expired', `Your coverage ended at ${time(expired.expiresAt)}. Review your membership to arrange renewal.`, '/member/membership', expired.expiresAt, plus(expired.expiresAt, 7 * DAY));
   }
   for (const row of payments) {
-    add(`payment:${row._id}:${row.version}`, 'payment_reminder', row.status === 'failed' ? 'Demo payment needs a retry' : 'Demo payment pending', `${row.planName}: ${row.currency} ${(row.amountMinor / 100).toFixed(2)}. This is a simulation; no real money is collected.`, '/member/payments', row.updatedAt);
+    add(`payment:${row._id}:${row.version}`, 'payment_reminder', row.status === 'failed' ? 'Payment needs a retry' : 'Payment pending', `${row.planName}: ${row.currency} ${(row.amountMinor / 100).toFixed(2)}. This is a simulation; no real money is collected.`, '/member/payments', row.updatedAt);
   }
   for (const row of workouts) {
     const occurredAt = row.archived ? row.archivedAt : row.createdAt;
